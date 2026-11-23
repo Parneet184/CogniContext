@@ -1,110 +1,201 @@
-# CogniContext
+# CogniContext – Japji Sahib RAG Application
 
-Psychometric-driven affective RAG concept: **working frontend demo + honest backend scaffold**.
+<p align="center">
+  <strong>Find clarity through Gurbani.</strong>
+</p>
 
-## Run frontend
+<p align="center">
+  An AI-powered emotional reflection application that connects a user's emotional state with the wisdom of Japji Sahib using Retrieval-Augmented Generation (RAG).
+</p>
+
+---
+
+## About the Project
+
+**CogniContext** is an AI-powered reflection platform designed to help users explore their emotions and understand the teachings of Japji Sahib in a meaningful and accessible way.
+
+The application begins with an emotional assessment to understand how a user is feeling. Based on their responses, the system retrieves a relevant passage (Pauri) from Japji Sahib using semantic search and emotion-based filtering.
+
+The retrieved passage is then passed to a Large Language Model (LLM) through Groq to generate a contextual explanation and support a grounded conversation.
+
+CogniContext aims to bring together **spiritual wisdom, emotional awareness, semantic retrieval, and conversational AI**.
+
+## Key Features
+
+- **Emotion-Based Assessment:** A short assessment to understand the user's current emotional state and energy level.
+- **Emotion-Aware Retrieval:** Retrieves relevant Japji Sahib passages based on emotional categories.
+- **Semantic Search:** Uses multilingual embeddings and ChromaDB for similarity-based retrieval.
+- **Japji Sahib Reader:** Displays original Gurmukhi text, transliteration, and English translations.
+- **AI-Powered Reflection:** Uses Groq to generate contextual responses grounded in retrieved scripture.
+- **Contextual Conversations:** Maintains conversation history and keeps the initially selected passage as context during follow-up questions.
+- **Scripture Exploration:** Provides access to Japji Sahib Pauris and the concluding Salok.
+
+## How It Works
+
+CogniContext follows a Retrieval-Augmented Generation (RAG) workflow.
+
+1. **Emotional Assessment:** The user completes a short assessment or expresses how they are feeling.
+2. **Query Processing:** The user's message is prepared for semantic retrieval.
+3. **Embedding Generation:** The multilingual E5 model converts the query into a vector representation.
+4. **Semantic Retrieval:** ChromaDB searches for relevant Japji Sahib passages using cosine similarity.
+5. **Emotion Filtering:** SQLite emotion mappings can filter the retrieved passages according to the selected emotional category.
+6. **Context Enrichment:** The selected passage is enriched with Gurmukhi text, transliteration, and English translation from SQLite.
+7. **LLM Generation:** The retrieved English translation and conversation context are passed to Groq.
+8. **Grounded Response:** The generated explanation is returned to the user for reflection and follow-up conversation.
+
+## System Architecture
+
+```mermaid
+flowchart TD
+    A[User] --> B[Emotion Assessment]
+    B --> C[User Message / Query]
+    C --> D[Multilingual E5 Embeddings]
+    D --> E[ChromaDB Semantic Search]
+    E --> F[SQLite Emotion Filtering]
+    F --> G[Retrieve Relevant Pauri]
+    G --> H[Scripture Enrichment]
+    H --> I[Groq LLM]
+    I --> J[Contextual Reflection]
+    J --> K[Follow-up Conversation]
+```
+
+## Technology Stack
+
+| Category | Technologies |
+|---|---|
+| Frontend | HTML, CSS, JavaScript |
+| Backend | Python, FastAPI |
+| Vector Database | ChromaDB |
+| Relational Database | SQLite |
+| Embedding Model | intfloat/multilingual-e5-small |
+| Large Language Model | Groq |
+| Retrieval Method | Cosine Similarity |
+| API Architecture | REST API |
+| Testing | Pytest |
+
+## Project Structure
+
+```text
+CogniContext/
+│
+├── backend/
+│   ├── data/
+│   │   ├── cognicontext.sqlite3
+│   │   └── chroma_japji/
+│   │
+│   ├── data_templates/
+│   ├── main.py
+│   ├── groq_service.py
+│   ├── vector_store.py
+│   ├── japji_db.py
+│   ├── local_db.py
+│   ├── requirements.txt
+│   └── .env.example
+│
+├── frontend/
+│   ├── index.html
+│   ├── app.js
+│   └── styles.css
+│
+├── data_templates/
+├── sql/
+├── tests/
+│
+├── README.md
+├── LOCAL_DATABASE_GUIDE.md
+└── test_groq.py
+```
+
+## Getting Started
+
+Follow these instructions to run CogniContext locally.
+
+### 1. Clone the Repository
 
 ```bash
+git clone https://github.com/Parneet184/CogniContext.git
+cd CogniContext
+```
+
+### 2. Create a Virtual Environment
+
+```bash
+python -m venv .venv
+```
+
+Activate it on Windows PowerShell:
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+### 3. Install Dependencies
+
+```bash
+pip install -r backend/requirements.txt
+```
+
+### 4. Configure Environment Variables
+
+Create your local environment file using the provided example:
+
+```powershell
+Copy-Item backend/.env.example backend/.env
+```
+
+Configure the required Groq API key and other environment settings according to the example file.
+
+**Never commit your `.env` file or expose API keys in the repository.**
+
+### 5. Start the Backend
+
+From the project root:
+
+```bash
+uvicorn backend.main:app --reload --port 8001
+```
+
+Backend:
+
+`http://127.0.0.1:8001`
+
+API documentation:
+
+`http://127.0.0.1:8001/docs`
+
+### 6. Start the Frontend
+
+Open a second terminal:
+
+```powershell
 cd frontend
 python -m http.server 8000
 ```
 
-Open http://localhost:8000. The demo works without keys, database, or network (web fonts require network). Select energy, then emotion, then Find my reflection. Explore sources, citations, sample chat and the architecture drawer.
+Open:
 
-## Run API
+`http://127.0.0.1:8000`
 
-```bash
-pip install -r backend/requirements.txt
-uvicorn backend.main:app --reload --port 8001
-```
+## API Endpoints
 
-Open http://localhost:8001/docs for OpenAPI docs. `GET /api/v1/health` reports which services are not configured. Live endpoints return HTTP 503 intentionally; **they are not implemented live**.
+The FastAPI backend provides the following endpoints:
 
-## Database foundation
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/v1/health` | Backend and database health information |
+| GET | `/api/v1/themes` | Available emotional themes |
+| GET | `/api/v1/japji/pauris` | Retrieve Japji Sahib Pauris |
+| GET | `/api/v1/japji/salok` | Retrieve concluding Salok |
+| GET | `/api/v1/japji/pauris/{pauri_number}` | Retrieve a specific Pauri |
+| POST | `/api/v1/japji/search` | Semantic scripture search |
+| POST | `/api/v1/chat` | AI-powered contextual conversation |
+| POST | `/api/v1/assess` | Emotion-based assessment and retrieval |
 
-Apply `sql/001_schema.sql` to PostgreSQL with pgvector installed. The embedding vector(768) is a **placeholder dimension**; change it to the selected embedding model's actual output dimension before ingesting. Private tables have RLS enabled and no client access policies; do not expose privileged database keys in browser code.
+Interactive API documentation is available at `/docs` when the backend is running.
 
-## System architecture target
+## Database and Retrieval
 
-Assessment → thematic state mapping → SQL prefilter → multilingual vector + lexical retrieval → reranking → provenance checks → grounded LLM → validated citations → notebook.
+CogniContext uses two complementary storage systems:
 
-## Implementation status
-
-- Functional: responsive frontend, two-stage assessment, six emotions, loading transition, notebook, sample scripture navigation, toggles, text sizing, copy, predefined conversational replies, source highlighting, accessible architecture drawer.
-- Scaffold only: FastAPI request validation, honest health status, schema and a few backend tests.
-- **Not implemented:** real corpus ingestion, embedding model, SQL/vector retrieval service, reranking, source validation, real LLM generation, persistent sessions, authentication, secure session authorization, complete RLS policies, speech playback, full evaluation suite and production deployment.
-- **Scripture notice:** sample Gurmukhi strings and illustrative English renderings are not represented as verified canonical records or authorized translations. Replace with expert-reviewed, appropriately licensed data before real use.
-
-## Privacy
-
-Demo selections stay in JavaScript memory. No assessment data is saved or transmitted. The backend rejects live requests rather than returning fictional verified sources.
-
-## Next steps
-
-1. Obtain an authorized, versioned scripture and translation dataset with provenance.
-2. Validate metadata and verse boundaries against the chosen edition.
-3. Select/evaluate multilingual embeddings on Gurmukhi + English; update vector dimension.
-4. Implement secure server-side corpus ingestion, hybrid retrieval and citation verification.
-5. Add authenticated session storage with ownership enforcement and RLS policies.
-6. Integrate a grounded LLM with abstention and safety checks; add evaluation and integration tests.
-
-## Local database upgrade (v0.2)
-
-See [LOCAL_DATABASE_GUIDE.md](LOCAL_DATABASE_GUIDE.md) for the new working SQLite schema, CSV/JSON importer, emotion-aware SQL lookup, API documentation, and tests. The previous **scaffold-only** API description above is superseded for database/search endpoints: `GET /api/v1/health`, `/api/v1/themes`, `/api/v1/scriptures`, `/api/v1/scriptures/{id}`, and `POST /api/v1/assess` now work. Grounded AI chat, vector retrieval, and authenticated scripture records are still pending. The colorful frontend remains a separately labeled demo.
-
-
-## Japji Sahib RAG MVP (new)
-
-The project now includes a first local corpus pipeline for Japji Sahib: 38 Pauris and the concluding Salok are extracted into `backend/data_templates/japji_pauris_extracted.json` and imported into a dedicated SQLite schema. The dedicated tables keep Pauri numbers separate from Ang numbers in the existing general scripture catalogue.
-
-See [backend/README_JAPJI_RAG.md](backend/README_JAPJI_RAG.md) for setup and API instructions. In short, from the project root run:
-
-```bash
-python -m pip install -r backend/requirements.txt
-python -m backend.import_japji
-python -c "from backend.vector_store import build_collection; print(build_collection())"
-uvicorn backend.main:app --reload --port 8001
-```
-
-Vector retrieval requires downloading the multilingual embedding model the first time. Emotion mappings remain empty until reviewed and confirmed by the project owner. The extracted Gurmukhi field is unavailable in the supplied PDF's font encoding; only the readable transliteration and supplied English translation have been imported.
-
-
-Japji Sahib RAG implementation (MVP)
-What is implemented
-- Extracted 38 numbered Pauris and the concluding Salok from data_templates/Japji-Sahib-GRE.pdf.
-- Structured Romanized Punjabi transliteration and the supplied English translation separately.
-- Added a dedicated SQLite schema for 38 Pauris, the concluding Salok, and emotion tags. This is deliberately separate from the existing scriptures table because Pauri numbers are not Sri Guru Granth Sahib Ang numbers.
-- Added a ChromaDB vector-store module using intfloat/multilingual-e5-small (384 dimensions).
-- Added API routes for listing/reading Pauris and semantic vector search.
-Important source limitation
-The PDF's embedded Gurmukhi font mapping does not extract as valid Unicode text. The imported original_gurmukhi value is therefore NULL. Do not invent or infer the Gurmukhi text. Add it only from a separately verified, appropriately authorized source. The transliteration and English translation are retained as extracted and still require human proofreading against the intended edition.
-
-The supplied English translation's rights/provenance have not been independently verified. Keep the source PDF and translation provenance attached to any public release.
-Setup (run from the project root)
-python -m pip install -r backend/requirements.txt
-python -m backend.import_japji
-The first vector ingestion downloads the embedding model if it is not already cached:
-python -c "from backend.vector_store import build_collection; print(build_collection())"
-API
-Start the API:
-uvicorn backend.main:app --reload --port 8001
-- GET /api/v1/japji/pauris — list all imported Pauris.
-- GET /api/v1/japji/pauris/1 — get one Pauri.
-- GET /api/v1/japji/salok — get the concluding Salok.
-- POST /api/v1/japji/search — vector search; optional emotion filter.
-Example request:
-{
-  "query": "How can I accept things that are outside my control?",
-  "limit": 5,
-  "emotion": "overwhelmed"
-}
-Emotion mapping
-The japji_emotion_map table is intentionally empty until the project's owner reviews and confirms the proposed emotion-to-Pauri associations. Do not treat generated or illustrative mappings as established truth.
-Model choice
-intfloat/multilingual-e5-small is used for a compact 384-dimensional multilingual embedding model. It is a practical MVP choice; evaluate retrieval quality on representative queries before calling the system production-ready. The E5 convention is used: prefix corpus text with passage: and user queries with query:.
-Provisional emotion mappings (MVP test only)
-The project includes a provisional many-to-many emotion annotation for all 38 Pauris, based on the initial assistant proposal and approved by the user for end-to-end workflow testing. These are draft interpretations, not authoritative meanings or theological classifications. They must be reviewed and corrected before public release or any claim of scripture-grounded emotional guidance.
-
-After importing the Pauris, run:
-python -m backend.seed_japji_emotions
-This writes draft rows (review_status=draft, annotation_source=draft_mapping) to SQLite. It does not mark them as user-confirmed. Multiple emotion tags per Pauri are supported. The earlier reverse-by-emotion summary was inconsistent with the Pauri-by-Pauri table, so the Pauri-by-Pauri list is used as the source of truth for this prototype.
+**SQLite**
+- Stores Japji

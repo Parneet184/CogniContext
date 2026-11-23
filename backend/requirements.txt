@@ -1,0 +1,10 @@
+fastapi>=0.115,<1
+uvicorn[standard]>=0.30,<1
+pydantic>=2,<3
+pytest>=8,<10
+httpx>=0.27,<1
+# Japji Sahib vector retrieval
+chromadb>=0.5,<2
+sentence-transformers>=3,<6
+# Optional PDF re-extraction (the structured JSON is already included)
+pymupdf>=1.24,<2

@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>CogniContext — A space for understanding</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+Gurmukhi:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <div class="brand">◈ &nbsp;CogniContext <small>A space for understanding.</small></div>
+        <nav><button id="new" class="textbtn" hidden>New reflection</button><button id="architecture"
+                class="textbtn">System architecture ↗</button><span class="mode">LIVE RETRIEVAL</span></nav>
+    </header>
+    <main id="app">
+        <section id="energy" class="assessment">
+            <div class="eyebrow">A MOMENT OF REFLECTION</div>
+            <h1>Before we begin,<br><em>how is your energy today?</em></h1>
+            <p>Your current state helps us find a more meaningful place to begin.</p>
+            <div class="choices two"><button class="choice" data-energy="low"><span class="symbol">☾</span><strong>Quiet
+                        / Low Energy</strong><span>I'm feeling slower, inward, or in need of rest.</span><span
+                        class="arrow">↗</span></button><button class="choice" data-energy="high"><span
+                        class="symbol">☼</span><strong>Active / High Energy</strong><span>I'm feeling alert, expressive,
+                        or ready to engage.</span><span class="arrow">↗</span></button></div>
+        </section>
+
+
+        <!-- STEP 2: ASSESSMENT PATH -->
+        <section id="assessment-choice" class="assessment" hidden>
+            <div class="eyebrow">UNDERSTANDING YOUR MOMENT</div>
+            <h1>Let's understand<br><em>how you're feeling.</em></h1>
+            <p>You can explore your emotions with a few questions, or choose directly.</p>
+
+            <div class="choices two">
+                <button id="take-assessment" class="choice">
+                    <span class="symbol">✧</span>
+                    <strong>Help me understand my feelings</strong>
+                    <span>Answer six short questions to explore your emotional state.</span>
+                    <span class="arrow">↗</span>
+                </button>
+
+                <button id="skip-assessment" class="choice">
+                    <span class="symbol">◇</span>
+                    <strong>I know how I feel</strong>
+                    <span>Skip the questions and choose your emotion directly.</span>
+                    <span class="arrow">↗</span>
+                </button>
+            </div>
+
+            <div class="actions">
+                <button id="back-energy" class="textbtn">← Back</button>
+            </div>
+        </section>
+
+        <!-- STEP 3: SIX-QUESTION ASSESSMENT -->
+        <section id="assessment" class="assessment" hidden>
+            <div class="eyebrow">EMOTIONAL CHECK-IN</div>
+            <h1>A little more about<br><em>your present moment.</em></h1>
+            <p>There are no right or wrong answers. Choose what feels true for you.</p>
+
+            <div class="assessment-card">
+                <div class="assessment-progress">
+                    <span id="assessment-count">QUESTION 1 OF 6</span>
+                    <span id="assessment-percent">0% COMPLETED</span>
+                </div>
+
+                <div class="progress-track">
+                    <div id="assessment-progress" class="progress-fill"></div>
+                </div>
+
+                <h2 id="assessment-question"></h2>
+
+                <div id="assessment-options" class="answer-options"></div>
+
+                <div class="actions">
+                    <button id="assessment-back" class="textbtn">← Previous</button>
+                    <button id="assessment-next" class="primary" disabled>
+                        Next question →
+                    </button>
+                </div>
+            </div>
+
+            <button id="assessment-exit" class="textbtn">
+                Skip assessment
+            </button>
+        </section>
+
+        <section id="emotion" class="assessment" hidden>
+            <div class="eyebrow">UNDERSTANDING YOUR MOMENT</div>
+
+            <h1>How are your<br><em>emotions right now?</em></h1>
+
+            <p>Choose the emotion that best describes your present moment. You can change the suggested emotion at any
+                time.</p>
+
+            <!-- Assessment result -->
+            <div id="assessment-result" class="assessment-result" hidden>
+                <div class="eyebrow">YOUR ASSESSMENT RESULT</div>
+                <h2 id="suggested-emotion-title"></h2>
+                <p id="suggested-emotion-message"></p>
+                <p class="result-question">
+                    Would you like to continue with this emotion, or choose another?
+                </p>
+            </div>
+
+            <!-- Emotion cards -->
+            <div class="choices emotions" id="emotions"></div>
+
+            <div class="actions">
+                <button id="back" class="textbtn">← Back</button>
+                <button id="find" class="primary" disabled>
+                    Find my reflection →
+                </button>
+            </div>
+        </section>
+
+        <!-- LOADING SCREEN -->
+        <section id="loading" class="assessment" hidden>
+            <div class="spinner"></div>
+
+            <h1>
+                Finding a reflection<br>
+                <em>for your present moment.</em>
+            </h1>
+
+            <p id="status" aria-live="polite">
+                Understanding your selected context
+            </p>
+        </section>
+
+        <section id="notebook" hidden>
+            <div class="workspace-title"><span>YOUR REFLECTION WORKSPACE</span><span id="context"></span></div>
+            <div class="workspace">
+                <article class="source">
+                    <div class="panel-head">
+                        <div>
+                            <div class="eyebrow">SOURCE LIBRARY</div>
+                            <h2>Sri Guru Granth Sahib Ji</h2>
+                        </div><span class="sample">LIVE SOURCE</span>
+                    </div>
+                    <div class="source-body">
+                        <div class="source-meta" id="source-meta"></div>
+                        <div class="section-label">ORIGINAL GURMUKHI</div>
+                        <div class="gurmukhi" id="gurmukhi"></div>
+                        <div id="translit-wrap">
+                            <div class="section-label">TRANSLITERATION</div>
+                            <p id="translit"></p>
+                        </div>
+                        <div id="translation-wrap">
+                            <div class="section-label">ENGLISH TRANSLATION</div>
+                            <p id="translation"></p>
+                        </div>
+                        <div class="notice">Retrieved source text is displayed from the local corpus. Extraction and
+                            translation still require independent verification.</div>
+                        <div class="reader"><button id="toggle-trans" class="textbtn">Hide
+                                transliteration</button><button id="toggle-english" class="textbtn">Hide
+                                translation</button><button id="copy-source" class="textbtn">Copy
+                                passage</button><button id="size" class="textbtn">A+ Text</button></div>
+                        <div class="section-label">SOURCE NAVIGATION</div>
+                        <div id="sources"></div>
+                    </div>
+                </article>
+                <section class="chat">
+                    <div class="panel-head">
+                        <div>
+                            <div class="eyebrow">GROUNDED CONVERSATION</div>
+                            <h2>A reflection for you</h2>
+                        </div><span class="sample">RETRIEVAL ONLY</span>
+                    </div>
+                    <div class="messages" id="messages" aria-live="polite"></div>
+                    <div class="suggestions" id="suggestions"></div>
+                    <form id="composer"><textarea id="message" placeholder="Ask a question about this reflection..."
+                            rows="2" required></textarea><button class="primary" type="submit">Send ↗</button></form>
+                </section>
+            </div>
+        </section>
+    </main>
+    <div class="overlay" id="overlay" hidden>
+        <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" tabindex="-1"><button
+                id="close" class="textbtn close">✕ Close</button>
+            <div class="eyebrow">BEHIND THE EXPERIENCE</div>
+            <h2 id="drawer-title">System architecture</h2>
+            <p>A transparent look at the retrieval and grounding pipeline.</p>
+            <div class="pipeline">Assessment ↓<br>State mapping ↓<br>SQL thematic filtering ↓<br>Vector retrieval +
+                reranking ↓<br>Source validation ↓<br>Grounded generation ↓<br>Citation verification</div>
+            <h3>Runtime status</h3>
+            <p><strong>Current mode:</strong> Live Japji Sahib retrieval through FastAPI, SQLite and ChromaDB. LLM
+                generation is not configured yet.</p>
+            <h3>Backend API</h3>
+            <code>POST /api/v1/assess<br>POST /api/v1/chat<br>GET /api/v1/health<br>GET /api/v1/scriptures/{id}</code>
+            <h3>Data protection</h3>
+            <p>Assessment selections are held in browser memory and sent to the local retrieval API to filter results.
+                They are not saved as a user profile.</p>
+        </aside>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>
